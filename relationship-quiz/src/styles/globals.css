@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --void: #080808;
+  --ash: #111111;
+  --smoke: #1a1a1a;
+  --ember: #FF3B1F;
+  --acid: #C8FF00;
+  --ghost: #F0EDE8;
+  --muted: #555555;
+  --wire: #2a2a2a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--void);
+  color: var(--ghost);
+  font-family: 'DM Mono', monospace;
+  cursor: crosshair;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--ember);
+  color: var(--void);
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Scan line effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,59,31,0.15), transparent);
+  animation: scan 8s linear infinite;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+@keyframes scan {
+  0% { top: -2px; }
+  100% { top: 100vh; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--ember); }
+
+/* Radio inputs hidden */
+input[type="radio"] {
+  display: none;
+}
+
+.answer-option {
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.answer-option::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--ember);
+  transition: width 0.2s ease;
+}
+
+.answer-option:hover::before,
+.answer-option.selected::before {
+  width: 3px;
+}
+
+.answer-option:hover {
+  background: rgba(255, 59, 31, 0.06);
+  border-color: rgba(255, 59, 31, 0.4) !important;
+  color: var(--ghost);
+}
+
+.answer-option.selected {
+  background: rgba(255, 59, 31, 0.1);
+  border-color: var(--ember) !important;
+  color: var(--ghost);
+}
+
+.grade-badge {
+  position: relative;
+  display: inline-block;
+}
+
+.grade-badge::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid currentColor;
+  opacity: 0.3;
+  transform: rotate(2deg);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--ember), #FF6B4A);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.result-stay {
+  --accent: #C8FF00;
+}
+.result-work {
+  --accent: #FFA500;
+}
+.result-leave {
+  --accent: #FF3B1F;
+}
+
+.category-bar {
+  height: 3px;
+  background: var(--wire);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-bar-fill {
+  height: 100%;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+}
+.glitch::before {
+  color: var(--ember);
+  animation: glitch1 4s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+.glitch::after {
+  color: var(--acid);
+  animation: glitch2 4s infinite;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitch1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-3px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(0); }
+}
+@keyframes glitch2 {
+  0%, 90%, 100% { transform: translate(0); }
+  91% { transform: translate(3px, -1px); }
+  93% { transform: translate(-2px, 1px); }
+  95% { transform: translate(0); }
+}
+
+.ticker {
+  animation: ticker 0.1s steps(1) infinite;
+}
+
+@keyframes ticker {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
